@@ -1,1 +1,1 @@
-web: python test
+web: test:app
