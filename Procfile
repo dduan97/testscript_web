@@ -1,1 +1,1 @@
-web: python test
+web: ls && python test
