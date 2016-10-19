@@ -4,6 +4,7 @@ from flask import Flask, jsonify, abort, make_response, request
 from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import json
 import urlparse
 
