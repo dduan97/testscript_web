@@ -47,7 +47,7 @@ def get_entry():
 			return jsonify({'entries': entries})
 	else:
 		cur = conn.cursor()
-		cur.execute("SELECT * FROM leaderboards")
+		cur.execute("SELECT * FROM leaderboard;")
 		rows = cur.fetchall()
 		return str(rows)
 
