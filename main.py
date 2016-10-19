@@ -51,6 +51,11 @@ def get_entry():
 		else:
 			return jsonify({'entries': entries})
 	else:
+		content = request.json
+    	user_id = content['user_id']
+    	time = content['time']
+    	if user_id = None or time = None:
+    		return make_response(jsonify({'error': 'user_id or time not provided'}), 404) 
 		cur.execute("SELECT net_id, time FROM leaderboard;")
 		return json.dumps(cur.fetchall(), indent=2)
 
