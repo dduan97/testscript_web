@@ -32,10 +32,17 @@ def get_entry(l_num):
 	if request.method == 'GET':
 		if request.args.has_key('user'):
 			user_name = request.args.get('user')
-			cur.execute("SELECT net_id, time FROM leaderboard WHERE net_id = '{}' AND ass_num = {};".format(user_name, l_num))
+			cur.execute("""SELECT net_id, time 
+							FROM leaderboard 
+							WHERE net_id = '{}' 
+							AND ass_num = {}
+							ORDER BY time;""".format(user_name, l_num))
 			return json.dumps(cur.fetchall(), indent=2)
 		else:
-			cur.execute("SELECT net_id, time FROM leaderboard WHERE ass_num = '{}';".format(l_num))
+			cur.execute("""SELECT net_id, time 
+							FROM leaderboard 
+							WHERE ass_num = '{}'
+							ORDER BY time;""".format(l_num))
 			return json.dumps(cur.fetchall(), indent=2)
 	else:
 		content = request.get_json()
