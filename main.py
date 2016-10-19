@@ -54,12 +54,12 @@ def get_entry():
 		content = request.get_json()
 		if content == None:
 			return make_response(jsonify({'error': 'content body empty'}), 404) 
-    	user_id = content['user_id']
+    	net_id = content['net_id']
     	time = content['time']
-    	if user_id == None or time == None:
-    		return make_response(jsonify({'error': 'user_id or time not provided'}), 404) 
+    	if net_id == None or time == None:
+    		return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
 		cur.execute("SELECT net_id, time FROM leaderboard;")
-		let json = json.dumps(cur.fetchall(), indent=2)
+		json = json.dumps(cur.fetchall(), indent=2)
 		return json
 
 @app.errorhandler(404)
