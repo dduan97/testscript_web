@@ -25,7 +25,7 @@ conn = psycopg2.connect(
 
 # GET / POST for leaderboard entries
 @app.route('/api/leaderboard/<int:l_num>/entries', methods=['GET', 'POST'])
-def get_entry():
+def get_entry(l_num):
 	# cursor object used to perform postgres db queries
 	cur = conn.cursor(cursor_factory=RealDictCursor)
 
