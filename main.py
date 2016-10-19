@@ -58,7 +58,7 @@ def get_entry(l_num):
 		# Insert id, time, ass_num into table
 		cur.execute("INSERT INTO leaderboard (net_id, time, ass_num) VALUES ('{}', {}, {});".format(net_id, time, l_num))
 		conn.commit()
-		return make_response(jsonify({'success': 'entry added'}), 404)
+		return make_response(jsonify({'success': 'entry added'}), 200)
 	return 'something went wrong...'
 
 # Pretty prints 404 Error
