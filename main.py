@@ -49,7 +49,8 @@ def get_entry():
 				abort(404)
 			return jsonify({'entries': entry_matches[0]})
 		else:
-			return jsonify({'entries': entries})
+			cur.execute("SELECT net_id, time FROM locations")
+			return json.dumps(cur.fetchall(), indent=2)
 	else:
 		content = request.get_json()
 		if content == None:
@@ -62,7 +63,7 @@ def get_entry():
 		cur.execute("INSERT INTO leaderboard (net_id, time) VALUES ('{}', {});".format(net_id, time))
 		conn.commit()
 		return make_response(jsonify({'success': 'entry added'}), 404)
-	return 'hi'
+	return 'something went wrong...'
 
 @app.errorhandler(404)
 def not_found(error):
