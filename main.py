@@ -53,7 +53,7 @@ def get_entry(l_num):
 		net_id = content['net_id']
 		time = content['time']
 		name = content['name']
-		if name = None:
+		if name == None:
 			name = ''
 		if net_id == None or time == None:
 			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
