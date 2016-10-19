@@ -58,7 +58,7 @@ def get_entry():
     	time = content['time']
     	if net_id == None or time == None:
     		return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
-		cur.execute("INSERT INTO leaderboard (net_id, time) VALUES ({}, {}".format(net_id, time))
+		cur.execute("INSERT INTO leaderboard (net_id, time) VALUES ({}, {});".format(net_id, time))
 		json = json.dumps(cur.fetchall(), indent=2)
 		return json
 
