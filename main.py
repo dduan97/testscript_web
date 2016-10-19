@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from flask import Flask, jsonify, abort, make_response, request
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 import os
 import psycopg2
 import urlparse
@@ -47,7 +47,7 @@ def get_entry():
 			return jsonify({'entries': entries})
 	else:
 		cur = conn.cursor()
-		cur.execute(""SELECT * FROM leaderboards"")
+		cur.execute("SELECT * FROM leaderboards")
 		rows = cur.fetchall()
 		return str(rows)
 
