@@ -14,11 +14,11 @@ urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ["DATABASE_URL"])
 
 conn = psycopg2.connect(
-    database=url.path[1:],
-    user=url.username,
-    password=url.password,
-    host=url.hostname,
-    port=url.port
+	database=url.path[1:],
+	user=url.username,
+	password=url.password,
+	host=url.hostname,
+	port=url.port
 )
 
 entries = [
@@ -54,12 +54,11 @@ def get_entry():
 		content = request.get_json()
 		if content == None:
 			return make_response(jsonify({'error': 'content body empty'}), 404) 
-    	net_id = content['net_id']
-    	time = content['time']
-    	if net_id == None or time == None:
-    		return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
-    	print "NET ID: {} : {}".format(net_id, str(time))
-
+		net_id = content['net_id']
+		time = content['time']
+		if net_id == None or time == None:
+			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
+		print "NET ID: {} : {}".format(net_id, str(time))
 		cur.execute("INSERT INTO leaderboard (net_id, time) VALUES ({}, {});".format(net_id, time))
 		conn.commit()
 		return make_response(jsonify({'success': 'entry added'}), 404)
