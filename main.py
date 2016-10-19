@@ -51,7 +51,9 @@ def get_entry():
 		else:
 			return jsonify({'entries': entries})
 	else:
-		content = request.json
+		content = request.get_json()
+		if content == None:
+			return make_response(jsonify({'error': 'content body empty'}), 404) 
     	user_id = content['user_id']
     	time = content['time']
     	if user_id == None or time == None:
