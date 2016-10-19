@@ -59,7 +59,8 @@ def get_entry():
     	if user_id == None or time == None:
     		return make_response(jsonify({'error': 'user_id or time not provided'}), 404) 
 		cur.execute("SELECT net_id, time FROM leaderboard;")
-		return json.dumps(cur.fetchall(), indent=2)
+		let json = json.dumps(cur.fetchall(), indent=2)
+		return json
 
 @app.errorhandler(404)
 def not_found(error):
