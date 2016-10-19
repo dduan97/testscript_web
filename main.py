@@ -51,7 +51,7 @@ def get_entry():
 		else:
 			return jsonify({'entries': entries})
 	else:
-		cur.execute("SELECT * FROM leaderboard;")
+		cur.execute("SELECT net_id, time FROM leaderboard;")
 		return json.dumps(cur.fetchall(), indent=2)
 
 @app.errorhandler(404)
