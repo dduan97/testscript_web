@@ -10,6 +10,8 @@ import urlparse
 
 app = Flask(__name__)
 
+
+# Set up postgres db connection
 urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ["DATABASE_URL"])
 
@@ -21,22 +23,8 @@ conn = psycopg2.connect(
 	port=url.port
 )
 
-entries = [
-	{
-		'name': u'jtw37',
-		'score': 153,
-	},
-	{
-		'name': u'djd66',
-		'score': 123,
-	},
-	{
-		'name': u'aec69',
-		'score': 152,
-	}
-]
-
-@app.route('/api/leaderboard/entries', methods=['GET', 'POST'])
+# GET / POST for leaderboard entries
+@app.route('/api/leaderboard/<int:l_num>/entries', methods=['GET', 'POST'])
 def get_entry():
 	# cursor object used to perform postgres db queries
 	cur = conn.cursor(cursor_factory=RealDictCursor)
@@ -44,12 +32,10 @@ def get_entry():
 	if request.method == 'GET':
 		if request.args.has_key('user'):
 			user_name = request.args.get('user')
-			entry_matches = [entry for entry in entries if entry['name'] == user_name]
-			if len(entry_matches) == 0:
-				abort(404)
-			return jsonify({'entries': entry_matches[0]})
+			cur.execute("SELECT net_id, time FROM leaderboard WHERE net_id = '{}' AND ass_num = {};".format(user_name, l_num))
+			return json.dumps(cur.fetchall(), indent=2)
 		else:
-			cur.execute("SELECT net_id, time FROM locations")
+			cur.execute("SELECT net_id, time FROM leaderboard WHERE ass_num = '{}';".format(l_num))
 			return json.dumps(cur.fetchall(), indent=2)
 	else:
 		content = request.get_json()
@@ -60,7 +46,7 @@ def get_entry():
 		if net_id == None or time == None:
 			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
 		print "NET ID: {} : {}".format(net_id, str(time))
-		cur.execute("INSERT INTO leaderboard (net_id, time) VALUES ('{}', {});".format(net_id, time))
+		cur.execute("INSERT INTO leaderboard (net_id, time, ass_num) VALUES ('{}', {});".format(net_id, time, l_num))
 		conn.commit()
 		return make_response(jsonify({'success': 'entry added'}), 404)
 	return 'something went wrong...'
