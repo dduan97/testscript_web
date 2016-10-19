@@ -38,7 +38,7 @@ entries = [
 @app.route('/api/leaderboard/entries', methods=['GET', 'POST'])
 def get_entry():
 	# cursor object used to perform postgres db queries
-	cur = conn.cursor()
+	cur = conn.cursor(cursor_factory=RealDictCursor)
 
 	if request.method == 'GET':
 		if request.args.has_key('user'):
@@ -51,8 +51,7 @@ def get_entry():
 			return jsonify({'entries': entries})
 	else:
 		cur.execute("SELECT * FROM leaderboard;")
-		rows = cur.fetchall()
-        return json.dumps( [dict(ix) for ix in rows] ) #CREATE JSON
+		return json.dumps(cur.fetchall(), indent=2)
 
 @app.errorhandler(404)
 def not_found(error):
