@@ -60,8 +60,7 @@ def get_entry():
     		return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
 		cur.execute("INSERT INTO leaderboard (net_id, time) VALUES ({}, {});".format(net_id, time))
 		conn.commit()
-		json = json.dumps(cur.fetchall(), indent=2)
-		return json
+		return make_response(jsonify({'success': 'entry added'}), 404)
 
 @app.errorhandler(404)
 def not_found(error):
