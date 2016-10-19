@@ -10,7 +10,6 @@ import urlparse
 
 app = Flask(__name__)
 
-
 # Set up postgres db connection
 urlparse.uses_netloc.append("postgres")
 url = urlparse.urlparse(os.environ["DATABASE_URL"])
@@ -38,13 +37,16 @@ def get_entry(l_num):
 							AND ass_num = {}
 							ORDER BY time;""".format(user_name, l_num))
 			return json.dumps(cur.fetchall(), indent=2)
-		else:
-			cur.execute("""SELECT net_id, time 
-							FROM leaderboard 
-							WHERE ass_num = '{}'
-							ORDER BY time;""".format(l_num))
-			return json.dumps(cur.fetchall(), indent=2)
+
+		# Otherwise get all get all entries for the ass_num	
+		cur.execute("""SELECT net_id, time 
+						FROM leaderboard 
+						WHERE ass_num = '{}'
+						ORDER BY time;""".format(l_num))
+		return json.dumps(cur.fetchall(), indent=2)
+
 	else:
+		# Parse request body
 		content = request.get_json()
 		if content == None:
 			return make_response(jsonify({'error': 'content body empty'}), 404) 
@@ -52,16 +54,19 @@ def get_entry(l_num):
 		time = content['time']
 		if net_id == None or time == None:
 			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
-		print "NET ID: {} : {}".format(net_id, str(time))
+
+		# Insert id, time, ass_num into table
 		cur.execute("INSERT INTO leaderboard (net_id, time, ass_num) VALUES ('{}', {}, {});".format(net_id, time, l_num))
 		conn.commit()
 		return make_response(jsonify({'success': 'entry added'}), 404)
 	return 'something went wrong...'
 
+# Pretty prints 404 Error
 @app.errorhandler(404)
 def not_found(error):
 	return make_response(jsonify({'error': 'Not found'}), 404)
 
+# Port manipulation required for Heroku
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
 	app.run(host='0.0.0.0', port=port, use_reloader=False, debug=True)
