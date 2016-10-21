@@ -47,7 +47,7 @@ def get_entry(l_num):
 						WHERE ass_num = '{}'
 						AND time_stamp = (SELECT MAX(time_stamp) FROM leaderboard AS f WHERE f.net_id = leaderboard.net_id)
 						ORDER BY time;""".format(l_num))
-		all_results = curr.fetchall()
+		all_results = cur.fetchall()
 		return json.dumps(all_results, indent=2)
 
 	else:
