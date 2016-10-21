@@ -36,15 +36,19 @@ def get_entry(l_num):
 							FROM leaderboard 
 							WHERE net_id = '{}' 
 							AND ass_num = {}
+							AND time_stamp = (SELECT MAX(time_stamp) FROM leaderboard AS f WHERE f.net_id = leaderboard.net_id)
 							ORDER BY time;""".format(user_name, l_num))
-			return json.dumps(cur.fetchall(), indent=2)
+			all_results = cur.fetchall()
+			return json.dumps(all_results, indent=2)
 
 		# Otherwise get all get all entries for the ass_num	
 		cur.execute("""SELECT net_id, time 
 						FROM leaderboard 
 						WHERE ass_num = '{}'
+						AND time_stamp = (SELECT MAX(time_stamp) FROM leaderboard AS f WHERE f.net_id = leaderboard.net_id)
 						ORDER BY time;""".format(l_num))
-		return json.dumps(cur.fetchall(), indent=2)
+		all_results = curr.fetchall()
+		return json.dumps(all_results, indent=2)
 
 	else:
 		# POST request
@@ -61,7 +65,8 @@ def get_entry(l_num):
 			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
 
 		# Insert id, time, ass_num, name into table
-		time_stamp = int(time.time())
+		time_stamp = int(time.time()) # Unix Time Stamp
+			#TODO: make sure time zones work appropriately.
 		cur.execute("""INSERT INTO leaderboard (net_id, time, ass_num, name, time_stamp) 
 						VALUES ('{}', {}, {}, '{}', {});""".format(net_id, speed, l_num, name, time_stamp))
 		conn.commit()
