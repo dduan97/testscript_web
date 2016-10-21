@@ -6,6 +6,7 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
+import time
 import urlparse
 
 app = Flask(__name__)
@@ -46,6 +47,7 @@ def get_entry(l_num):
 		return json.dumps(cur.fetchall(), indent=2)
 
 	else:
+		# POST request
 		# Parse request body
 		content = request.get_json()
 		if content == None:
@@ -58,9 +60,10 @@ def get_entry(l_num):
 		if net_id == None or time == None:
 			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
 
-		# Insert id, time, ass_num into table
-		cur.execute("""INSERT INTO leaderboard (net_id, time, ass_num, name) 
-						VALUES ('{}', {}, {}, '{}');""".format(net_id, time, l_num, name))
+		# Insert id, time, ass_num, name into table
+		time_stamp = int(time.time())
+		cur.execute("""INSERT INTO leaderboard (net_id, time, ass_num, name, time_stamp) 
+						VALUES ('{}', {}, {}, '{}', {});""".format(net_id, time, l_num, name, time_stamp))
 		conn.commit()
 		return make_response(jsonify({'success': 'entry added'}), 200)
 	return 'something went wrong...'
