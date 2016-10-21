@@ -53,17 +53,17 @@ def get_entry(l_num):
 		if content == None:
 			return make_response(jsonify({'error': 'content body empty'}), 404) 
 		net_id = content['net_id']
-		time = content['time']
+		speed = content['time']
 		name = content['name']
 		if name == None:
 			name = ''
-		if net_id == None or time == None:
+		if net_id == None or speed == None:
 			return make_response(jsonify({'error': 'net_id or time not provided'}), 404) 
 
 		# Insert id, time, ass_num, name into table
 		time_stamp = int(time.time())
 		cur.execute("""INSERT INTO leaderboard (net_id, time, ass_num, name, time_stamp) 
-						VALUES ('{}', {}, {}, '{}', {});""".format(net_id, time, l_num, name, time_stamp))
+						VALUES ('{}', {}, {}, '{}', {});""".format(net_id, speed, l_num, name, time_stamp))
 		conn.commit()
 		return make_response(jsonify({'success': 'entry added'}), 200)
 	return 'something went wrong...'
